@@ -40,16 +40,17 @@ CFLAGS   = -O3 -Wall -fPIC -include cstdint
 LINKER   = ar rvs
 
 # linking flags here
-LFLAGS   =  
+LFLAGS   =
 
 # change these to set the proper directories where each files shoould be
 
 SRCDIR   = src
+INCDIR   = include
 OBJDIR   = obj
 LIBDIR   = lib
 
 SOURCES  := $(wildcard $(SRCDIR)/*.cpp)
-INCLUDES := $(wildcard $(SRCDIR)/*.h)
+INCLUDES := $(wildcard $(INCDIR)/*.h)
 OBJECTS  := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 rm       = rm -rf
 mkdir    = mkdir -p
@@ -67,10 +68,14 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 .PHONEY: clean
 clean:
 	@$(rm) $(OBJDIR)
-	@echo "Cleanup complete!" 
+	@echo "Cleanup complete!"
 	@echo $(OBJECTS)
 
 .PHONEY: remove
 remove: clean
 	@$(rm) $(LIBDIR)
 	@echo "Executable removed!"
+
+install: $(LIBDIR)/$(TARGET)
+	cp $(LIBDIR)/$(TARGET) /usr/lib
+	cp $(INCLUDES) /usr/include
